@@ -351,8 +351,8 @@ pre-commit install
 ## Releasing to PyPI
 
 [`.github/workflows/test.yml`](.github/workflows/test.yml) runs on every push and PR to `main`, `master`, or `develop`:
-`uv sync --extra dev`, Ruff, mdformat, mypy, and pytest, across Ubuntu, macOS, and Windows on Python 3.10, 3.12, and
-3.13.
+`uv sync --extra dev`, Ruff, mdformat, mypy, and pytest, across Ubuntu, macOS, and Windows on Python 3.12, 3.13, and
+3.14.
 
 [`.github/workflows/release.yml`](.github/workflows/release.yml) is manual (`workflow_dispatch`) and publishes to
 [PyPI](https://pypi.org/p/archgraph-mcp) via [trusted publishing](https://docs.pypi.org/trusted-publishers/) (OIDC, no

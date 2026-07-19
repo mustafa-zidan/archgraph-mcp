@@ -7,8 +7,8 @@ repository, and wiring it into common MCP clients.
 
 - **[uv](https://docs.astral.sh/uv/install/)** on your `PATH` (provides `uvx` to run PyPI tools without a global pip
   install).
-- **Python 3.10+** (3.12+ recommended; Kuzu ships wheels for 3.10–3.13 on common platforms). uv picks a compatible
-  interpreter for the tool environment.
+- **Python 3.12+** (Kuzu ships wheels for 3.12–3.14 on common platforms). uv picks a compatible interpreter for the tool
+  environment.
 - A **repository** containing supported languages (TypeScript/TSX, Java, Kotlin).
 
 ## Run without installing (uvx)

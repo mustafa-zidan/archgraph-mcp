@@ -6,7 +6,7 @@ JSON snippets, see [Setup and MCP](setup-and-mcp.md).
 
 ## Prerequisites
 
-- **Python 3.10+** (3.12 is a good default; Kuzu publishes wheels for common platforms).
+- **Python 3.12+** (Kuzu publishes wheels for common platforms).
 - **[uv](https://docs.astral.sh/uv/install/)** (recommended) or another PEP 517 installer.
 - Supported languages in the target repo: TypeScript/TSX, Java, Kotlin.
 

@@ -1,9 +1,9 @@
 """Deterministic enums for graph node and edge types."""
 
-from enum import Enum
+from enum import StrEnum
 
 
-class NodeType(str, Enum):
+class NodeType(StrEnum):
     """Types of nodes in the code knowledge graph."""
 
     REPOSITORY = "repository"
@@ -15,7 +15,7 @@ class NodeType(str, Enum):
     DATABASE = "database"
 
 
-class EdgeType(str, Enum):
+class EdgeType(StrEnum):
     """Types of edges (relationships) in the code knowledge graph."""
 
     IMPORTS = "imports"
