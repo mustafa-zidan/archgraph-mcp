@@ -74,5 +74,6 @@ module = [
     "tree_sitter_kotlin.*",
     "kuzu.*",
     "numpy.*",
+    "sentence_transformers.*",
 ]
 ignore_missing_imports = true
