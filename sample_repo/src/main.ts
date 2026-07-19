@@ -1,4 +1,4 @@
-import { getUser } from "./utils";
+import {getUser} from "./utils";
 
 export function login(username: string, password: string): boolean {
     const user = getUser(username);

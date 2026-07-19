@@ -15,3 +15,4 @@ venv/
 test_out.log
 smoke_out.log
 test_output.txt
+.idea/

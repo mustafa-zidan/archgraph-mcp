@@ -10,10 +10,10 @@ from typing import Any
 
 import kuzu
 
-from codegraph_mcp.enums import EdgeType, NodeType
-from codegraph_mcp.models import Edge, Node
+from archgraph_mcp.enums import EdgeType, NodeType
+from archgraph_mcp.models import Edge, Node
 
-logger = logging.getLogger("codegraph_mcp.storage")
+logger = logging.getLogger("archgraph_mcp.storage")
 
 _NODE_TABLE = "CodeNode"
 _REL_TABLE = "CODE_EDGE"
@@ -30,7 +30,7 @@ def _cypher_quote(s: str | None) -> str:
 class KuzuStore:
     """Read/write graph data to a local Kuzu database with FTS on node text fields."""
 
-    def __init__(self, db_path: Path | str = "codegraph.kuzu") -> None:
+    def __init__(self, db_path: Path | str = "archgraph.kuzu") -> None:
         self._db_path = Path(db_path)
         self._db_path.parent.mkdir(parents=True, exist_ok=True)
         self._db = kuzu.Database(str(self._db_path))

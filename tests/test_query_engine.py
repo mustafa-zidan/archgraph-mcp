@@ -2,9 +2,9 @@
 
 from pathlib import Path
 
-from codegraph_mcp.graph.builder import GraphBuilder
-from codegraph_mcp.graph.query_engine import QueryEngine
-from codegraph_mcp.models import GraphQuery
+from archgraph_mcp.graph.builder import GraphBuilder
+from archgraph_mcp.graph.query_engine import QueryEngine
+from archgraph_mcp.models import GraphQuery
 
 
 class TestQueryEngine:

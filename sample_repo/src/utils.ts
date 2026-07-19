@@ -4,7 +4,7 @@ export interface User {
 }
 
 const users: User[] = [
-    { username: "admin", password: "secret" },
+    {username: "admin", password: "secret"},
 ];
 
 export function getUser(username: string): User | undefined {

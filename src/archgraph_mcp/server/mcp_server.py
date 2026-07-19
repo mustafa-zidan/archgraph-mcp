@@ -1,4 +1,4 @@
-"""MCP server exposing CodeGraph tools to AI agents."""
+"""MCP server exposing ArchGraph tools to AI agents."""
 
 from __future__ import annotations
 
@@ -12,14 +12,14 @@ from mcp.server.fastmcp import FastMCP
 from starlette.requests import Request
 from starlette.responses import HTMLResponse, JSONResponse
 
-from codegraph_mcp.enums import NodeType
-from codegraph_mcp.graph.builder import GraphBuilder
-from codegraph_mcp.graph.query_engine import QueryEngine
-from codegraph_mcp.logging_config import setup_logging
-from codegraph_mcp.models import GraphQuery
-from codegraph_mcp.storage.kuzu_store import KuzuStore
+from archgraph_mcp.enums import NodeType
+from archgraph_mcp.graph.builder import GraphBuilder
+from archgraph_mcp.graph.query_engine import QueryEngine
+from archgraph_mcp.logging_config import setup_logging
+from archgraph_mcp.models import GraphQuery
+from archgraph_mcp.storage.kuzu_store import KuzuStore
 
-logger = logging.getLogger("codegraph_mcp.server")
+logger = logging.getLogger("archgraph_mcp.server")
 
 # Default HTTP port when PORT / FASTMCP_PORT are unset (avoid 8080 / 3000 collisions).
 DEFAULT_HTTP_PORT = 3847
@@ -34,7 +34,7 @@ _store_path: str | None = None
 _graph_ui_routes_registered: bool = False
 
 mcp = FastMCP(
-    "CodeGraph MCP",
+    "ArchGraph MCP",
     host="0.0.0.0",
     port=int(os.environ.get("FASTMCP_PORT", os.environ.get("PORT", str(DEFAULT_HTTP_PORT)))),
 )
@@ -107,7 +107,7 @@ def _register_graph_ui_routes() -> None:
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>CodeGraph</title>
+  <title>ArchGraph</title>
   <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
   <style>
     body { font-family: system-ui, sans-serif; margin: 0; background: #0f1419; color: #e6edf3; }
@@ -117,7 +117,7 @@ def _register_graph_ui_routes() -> None:
   </style>
 </head>
 <body>
-  <div id="header">CodeGraph <span id="meta"></span> &middot; <a href="/api/graph">JSON</a></div>
+  <div id="header">ArchGraph <span id="meta"></span> &middot; <a href="/api/graph">JSON</a></div>
   <div id="net"></div>
   <script>
     const q = new URLSearchParams(location.search);
@@ -167,9 +167,9 @@ def initialize(repo_path: str, store_path: str | None = None, *, graph_ui: bool 
     global _builder, _engine, _store, _store_path
 
     setup_logging()
-    logger.info("Initializing CodeGraph for %s", repo_path)
+    logger.info("Initializing ArchGraph for %s", repo_path)
 
-    resolved = Path(store_path or os.environ.get("CODEGRAPH_STORE") or "codegraph.kuzu").resolve()
+    resolved = Path(store_path or os.environ.get("ARCHGRAPH_STORE") or "archgraph.kuzu").resolve()
     _store_path = str(resolved)
     _store = KuzuStore(_store_path)
     _builder = GraphBuilder()
@@ -180,7 +180,7 @@ def initialize(repo_path: str, store_path: str | None = None, *, graph_ui: bool 
         nodes = _store.load_nodes()
         edges = _store.load_edges()
         if nodes:
-            from codegraph_mcp.parser.base import ParseResult
+            from archgraph_mcp.parser.base import ParseResult
 
             result = ParseResult()
             result.nodes = nodes
@@ -194,19 +194,19 @@ def initialize(repo_path: str, store_path: str | None = None, *, graph_ui: bool 
         else:
             logger.info(
                 "Graph store empty — scanning repository (large trees can take several minutes; "
-                "run `codegraph-mcp analyze` first for a faster cold start)."
+                "run `archgraph-mcp analyze` first for a faster cold start)."
             )
             _full_build(repo_path)
     else:
         # ---------- cold path: full repo scan ----------
         logger.info(
             "No graph store yet — scanning repository (large trees can take several minutes; "
-            "run `codegraph-mcp analyze` first for a faster cold start)."
+            "run `archgraph-mcp analyze` first for a faster cold start)."
         )
         _full_build(repo_path)
 
     _engine = QueryEngine(_builder.graph, _builder._node_index, fts_store=_store)
-    logger.info("CodeGraph ready.")
+    logger.info("ArchGraph ready.")
 
     if graph_ui:
         _register_graph_ui_routes()
@@ -225,7 +225,7 @@ def _full_build(repo_path: str) -> None:
     builder.build_from_repository(repo)
     store.save_graph(builder.all_nodes(), builder.all_edges())
     if _store_path is not None:
-        from codegraph_mcp.semantic.build import maybe_build_semantic_index
+        from archgraph_mcp.semantic.build import maybe_build_semantic_index
 
         maybe_build_semantic_index(_store_path, builder.all_nodes())
 
@@ -233,7 +233,7 @@ def _full_build(repo_path: str) -> None:
 def _require_engine() -> QueryEngine:
     """Return the shared query engine or raise if ``initialize`` has not run."""
     if _engine is None:
-        raise RuntimeError("CodeGraph not initialized. Call `initialize(repo_path)` first.")
+        raise RuntimeError("ArchGraph not initialized. Call `initialize(repo_path)` first.")
     return _engine
 
 
@@ -298,26 +298,26 @@ def architecture_summary() -> str:
 def search_nodes_semantic(query: str, node_type: str | None = None, limit: int = 20) -> str:
     """Semantic search over nodes using the optional vector index (cosine similarity).
 
-    Requires ``pip install codegraph-mcp[semantic]``, a built index (see README),
+    Requires ``pip install archgraph-mcp[semantic]``, a built index (see README),
     and embedding configuration (local model or OpenAI-compatible API).
     """
     engine = _require_engine()
     if _store_path is None:
         return json.dumps([])
     try:
-        from codegraph_mcp.semantic.embeddings import describe_embedding_backend, get_backend_from_env
-        from codegraph_mcp.semantic.vector_index import search as semantic_search
-        from codegraph_mcp.semantic.vector_index import vector_index_path_for_store
+        from archgraph_mcp.semantic.embeddings import describe_embedding_backend, get_backend_from_env
+        from archgraph_mcp.semantic.vector_index import search as semantic_search
+        from archgraph_mcp.semantic.vector_index import vector_index_path_for_store
     except ImportError as e:
         return json.dumps(
-            {"error": "semantic extra not installed", "hint": "pip install codegraph-mcp[semantic]", "detail": str(e)}
+            {"error": "semantic extra not installed", "hint": "pip install archgraph-mcp[semantic]", "detail": str(e)}
         )
     vpath = vector_index_path_for_store(_store_path)
     if not vpath.is_file():
         return json.dumps(
             {
                 "error": "no vector index",
-                "hint": "Set CODEGRAPH_BUILD_SEMANTIC_INDEX=1 and re-analyze, or run analyze with semantic index build",
+                "hint": "Set ARCHGRAPH_BUILD_SEMANTIC_INDEX=1 and re-analyze, or run analyze with semantic index build",
             }
         )
     nt = NodeType(node_type) if node_type else None

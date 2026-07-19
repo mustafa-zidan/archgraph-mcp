@@ -9,11 +9,11 @@ import tree_sitter_java as ts_java
 from tree_sitter import Language, Parser
 from tree_sitter import Node as TSNode
 
-from codegraph_mcp.enums import EdgeType, NodeType
-from codegraph_mcp.models import Edge, Node
-from codegraph_mcp.parser.base import BaseParser, ParseResult, utf8_node_text
+from archgraph_mcp.enums import EdgeType, NodeType
+from archgraph_mcp.models import Edge, Node
+from archgraph_mcp.parser.base import BaseParser, ParseResult, utf8_node_text
 
-logger = logging.getLogger("codegraph_mcp.parser.java")
+logger = logging.getLogger("archgraph_mcp.parser.java")
 
 _JAVA_LANGUAGE = Language(ts_java.language())
 

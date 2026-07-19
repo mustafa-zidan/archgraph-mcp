@@ -1,4 +1,4 @@
-"""Structured logging configuration for CodeGraph MCP."""
+"""Structured logging configuration for ArchGraph MCP."""
 
 from __future__ import annotations
 
@@ -7,8 +7,8 @@ import sys
 
 
 def setup_logging(level: int = logging.INFO) -> logging.Logger:
-    """Configure and return the root logger for codegraph_mcp."""
-    logger = logging.getLogger("codegraph_mcp")
+    """Configure and return the root logger for archgraph_mcp."""
+    logger = logging.getLogger("archgraph_mcp")
     if logger.handlers:
         return logger
 

@@ -9,10 +9,10 @@ from typing import Any
 
 import numpy as np
 
-from codegraph_mcp.enums import NodeType
-from codegraph_mcp.models import Node
+from archgraph_mcp.enums import NodeType
+from archgraph_mcp.models import Node
 
-logger = logging.getLogger("codegraph_mcp.semantic.vector_index")
+logger = logging.getLogger("archgraph_mcp.semantic.vector_index")
 
 
 def vector_index_path_for_store(store_path: Path | str) -> Path:

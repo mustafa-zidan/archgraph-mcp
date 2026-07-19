@@ -9,7 +9,7 @@ import urllib.error
 import urllib.request
 from typing import Any, Protocol, runtime_checkable
 
-logger = logging.getLogger("codegraph_mcp.semantic.embeddings")
+logger = logging.getLogger("archgraph_mcp.semantic.embeddings")
 
 
 class EmbeddingCountMismatch(Exception):
@@ -47,7 +47,7 @@ class OpenAICompatibleEmbeddings:
         self.base_url = (base_url or os.environ.get("OPENAI_BASE_URL") or "https://api.openai.com/v1").rstrip("/")
         self.api_key = api_key or os.environ.get("OPENAI_API_KEY") or ""
         self.model = model or os.environ.get("OPENAI_EMBEDDING_MODEL") or "text-embedding-3-small"
-        raw_bs = batch_size if batch_size is not None else os.environ.get("CODEGRAPH_EMBED_BATCH_SIZE", "64")
+        raw_bs = batch_size if batch_size is not None else os.environ.get("ARCHGRAPH_EMBED_BATCH_SIZE", "64")
         try:
             self.batch_size = max(1, int(raw_bs))
         except (TypeError, ValueError):
@@ -88,11 +88,7 @@ class OpenAICompatibleEmbeddings:
                 all_have_index = False
             else:
                 indexed[int(idx)] = emb
-        if (
-            all_have_index
-            and len(indexed) == expected
-            and set(indexed.keys()) == set(range(expected))
-        ):
+        if all_have_index and len(indexed) == expected and set(indexed.keys()) == set(range(expected)):
             return [indexed[i] for i in range(expected)]
         return raw
 
@@ -138,7 +134,7 @@ class LocalSentenceEmbeddings:
     """In-process embeddings (sentence-transformers). Requires ``semantic`` extra."""
 
     def __init__(self, model_name: str | None = None) -> None:
-        self.model_name = model_name or os.environ.get("CODEGRAPH_LOCAL_EMBED_MODEL") or "all-MiniLM-L6-v2"
+        self.model_name = model_name or os.environ.get("ARCHGRAPH_LOCAL_EMBED_MODEL") or "all-MiniLM-L6-v2"
         self._model = None
 
     def _get_model(self) -> Any:
@@ -161,16 +157,14 @@ class LocalSentenceEmbeddings:
 def describe_embedding_backend(backend: EmbeddingBackend) -> str:
     """Short label for log messages (no secrets)."""
     if isinstance(backend, OpenAICompatibleEmbeddings):
-        return (
-            f"OpenAI-compatible HTTP (model={backend.model!r}, base_url={backend.base_url!r})"
-        )
+        return f"OpenAI-compatible HTTP (model={backend.model!r}, base_url={backend.base_url!r})"
     if isinstance(backend, LocalSentenceEmbeddings):
         return f"local sentence-transformers (model={backend.model_name!r})"
     return type(backend).__name__
 
 
 def get_backend_from_env() -> EmbeddingBackend:
-    backend = (os.environ.get("CODEGRAPH_EMBED_BACKEND") or "openai").strip().lower()
+    backend = (os.environ.get("ARCHGRAPH_EMBED_BACKEND") or "openai").strip().lower()
     if backend in ("local", "sentence", "sentence_transformers"):
         return LocalSentenceEmbeddings()
     return OpenAICompatibleEmbeddings()

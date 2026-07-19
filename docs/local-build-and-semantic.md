@@ -16,22 +16,22 @@ Clone and sync dependencies. The **`semantic`** extra pulls in **NumPy**, which 
 (`*.vectors.npz`).
 
 ```bash
-git clone https://github.com/MrHappy439/codegraph-mcp.git
-cd codegraph-mcp
+git clone https://github.com/mustafa-zidan/archgraph-mcp.git
+cd archgraph-mcp
 uv sync --extra dev --extra semantic
 ```
 
 Smoke-test the CLI:
 
 ```bash
-uv run codegraph-mcp --help
+uv run archgraph-mcp --help
 ```
 
 Equivalent without uv (from repo root, after creating a venv):
 
 ```bash
 pip install -e ".[semantic,dev]"
-codegraph-mcp --help
+archgraph-mcp --help
 ```
 
 **Core-only** (no semantic index / `search_nodes_semantic`): omit `--extra semantic` and skip `--semantic-index` below.
@@ -44,13 +44,13 @@ dimensions or semantics will not line up.
 
 ### Backend: OpenAI-compatible HTTP (default)
 
-`CODEGRAPH_EMBED_BACKEND` defaults to **`openai`**. The client calls:
+`ARCHGRAPH_EMBED_BACKEND` defaults to **`openai`**. The client calls:
 
 `POST {OPENAI_BASE_URL}/v1/embeddings`
 
 | Variable                     | Role                                                                                                                                                                        |
 | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `CODEGRAPH_EMBED_BATCH_SIZE` | Strings per `/v1/embeddings` request (default `64`). If the server returns fewer vectors than inputs, the client retries one-by-one; set `1` to avoid a failed batch first. |
+| `ARCHGRAPH_EMBED_BATCH_SIZE` | Strings per `/v1/embeddings` request (default `64`). If the server returns fewer vectors than inputs, the client retries one-by-one; set `1` to avoid a failed batch first. |
 | `OPENAI_BASE_URL`            | API root including `/v1` suffix as used by your server (e.g. `https://api.openai.com/v1` or `http://127.0.0.1:1234/v1` for LM Studio).                                      |
 | `OPENAI_API_KEY`             | Bearer token; use a placeholder if the local server ignores auth.                                                                                                           |
 | `OPENAI_EMBEDDING_MODEL`     | Model id your server exposes for embeddings.                                                                                                                                |
@@ -69,12 +69,12 @@ export OPENAI_API_KEY=local
 Set:
 
 ```bash
-export CODEGRAPH_EMBED_BACKEND=local
+export ARCHGRAPH_EMBED_BACKEND=local
 # optional; default is all-MiniLM-L6-v2
-export CODEGRAPH_LOCAL_EMBED_MODEL=all-MiniLM-L6-v2
+export ARCHGRAPH_LOCAL_EMBED_MODEL=all-MiniLM-L6-v2
 ```
 
-Install the library **in the same environment** as CodeGraph:
+Install the library **in the same environment** as ArchGraph:
 
 ```bash
 uv pip install sentence-transformers
@@ -89,55 +89,55 @@ From your clone, with embedding env vars set (if not using public OpenAI default
 
 ```bash
 cd /path/to/target-repo
-uv run --directory /path/to/codegraph-mcp codegraph-mcp analyze . --semantic-index
+uv run --directory /path/to/archgraph-mcp archgraph-mcp analyze . --semantic-index
 ```
 
-Or, if your shell is already in the `codegraph-mcp` repo:
+Or, if your shell is already in the `archgraph-mcp` repo:
 
 ```bash
-uv run codegraph-mcp analyze /path/to/target-repo --semantic-index
+uv run archgraph-mcp analyze /path/to/target-repo --semantic-index
 ```
 
 What this does:
 
 1. Scans the repo and builds the graph.
-2. Writes the Kuzu database (default **`./codegraph.kuzu`** in the **current working directory** unless you pass
+2. Writes the Kuzu database (default **`./archgraph.kuzu`** in the **current working directory** unless you pass
    `--store`).
-3. Sets `CODEGRAPH_BUILD_SEMANTIC_INDEX` internally when you pass `--semantic-index`, then writes:
+3. Sets `ARCHGRAPH_BUILD_SEMANTIC_INDEX` internally when you pass `--semantic-index`, then writes:
    - **`{store}.vectors.npz`** — compressed matrix of node embeddings
    - **`{store}.embeddings.json`** — small metadata sidecar
 
 Use an explicit store when you want everything in one place:
 
 ```bash
-uv run codegraph-mcp analyze /path/to/repo \
-  --store /path/to/repo/.codegraph/codegraph.kuzu \
+uv run archgraph-mcp analyze /path/to/repo \
+  --store /path/to/repo/.archgraph/archgraph.kuzu \
   --semantic-index
 ```
 
-That produces `/path/to/repo/.codegraph/codegraph.vectors.npz` (same basename stem as the `.kuzu` path).
+That produces `/path/to/repo/.archgraph/archgraph.vectors.npz` (same basename stem as the `.kuzu` path).
 
-You can instead set `CODEGRAPH_BUILD_SEMANTIC_INDEX=1` and run `analyze` **without** the flag; the CLI flag is shorthand
+You can instead set `ARCHGRAPH_BUILD_SEMANTIC_INDEX=1` and run `analyze` **without** the flag; the CLI flag is shorthand
 for that.
 
 ## 4. Serve the same repo and store
 
-Point **`serve`** at the **same repository root** and **same `--store`** (or `CODEGRAPH_STORE`) so the server finds the
+Point **`serve`** at the **same repository root** and **same `--store`** (or `ARCHGRAPH_STORE`) so the server finds the
 Kuzu DB and the sibling `*.vectors.npz`.
 
 Keep the **same embedding environment variables** as during `analyze` (especially model and backend).
 
 ```bash
-export CODEGRAPH_STORE=/path/to/repo/.codegraph/codegraph.kuzu
-#(re-apply OPENAI_* or CODEGRAPH_EMBED_BACKEND / CODEGRAPH_LOCAL_EMBED_MODEL as above)
+export ARCHGRAPH_STORE=/path/to/repo/.archgraph/archgraph.kuzu
+#(re-apply OPENAI_* or ARCHGRAPH_EMBED_BACKEND / ARCHGRAPH_LOCAL_EMBED_MODEL as above)
 
-uv run codegraph-mcp serve /path/to/repo
+uv run archgraph-mcp serve /path/to/repo
 ```
 
 For HTTP transport (e.g. remote MCP):
 
 ```bash
-uv run codegraph-mcp serve /path/to/repo \
+uv run archgraph-mcp serve /path/to/repo \
   --transport streamable-http \
   --port 3847
 ```
@@ -148,12 +148,12 @@ On startup, **`initialize` loads from Kuzu** if it already has nodes; it does **
 rebuild the vector index in that case.
 
 The vector index is built after a **full repository scan** inside `serve` only when the store is missing or empty —
-**and** only if `CODEGRAPH_BUILD_SEMANTIC_INDEX` is truthy in the environment. The `serve` subcommand does **not**
+**and** only if `ARCHGRAPH_BUILD_SEMANTIC_INDEX` is truthy in the environment. The `serve` subcommand does **not**
 accept `--semantic-index`; use **`analyze ... --semantic-index`** (or set the env var) before relying on
 `search_nodes_semantic`.
 
 **Practical workflow:** run **`analyze ... --semantic-index`** whenever the codebase changes and you want an up-to-date
-semantic index; then **`serve`** with matching `CODEGRAPH_STORE` and embedding settings.
+semantic index; then **`serve`** with matching `ARCHGRAPH_STORE` and embedding settings.
 
 ## 5. Verify semantic search
 

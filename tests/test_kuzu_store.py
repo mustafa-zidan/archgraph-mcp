@@ -2,9 +2,9 @@
 
 from pathlib import Path
 
-from codegraph_mcp.enums import EdgeType, NodeType
-from codegraph_mcp.models import Edge, Node
-from codegraph_mcp.storage.kuzu_store import KuzuStore
+from archgraph_mcp.enums import EdgeType, NodeType
+from archgraph_mcp.models import Edge, Node
+from archgraph_mcp.storage.kuzu_store import KuzuStore
 
 
 class TestKuzuStore:

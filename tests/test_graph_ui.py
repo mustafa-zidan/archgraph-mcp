@@ -4,7 +4,7 @@ from pathlib import Path
 
 from starlette.testclient import TestClient
 
-from codegraph_mcp.server import mcp_server
+from archgraph_mcp.server import mcp_server
 
 
 def test_api_graph_returns_payload_when_graph_ui_enabled(tmp_path: Path, sample_repo_dir: Path) -> None:
@@ -21,7 +21,7 @@ def test_api_graph_returns_payload_when_graph_ui_enabled(tmp_path: Path, sample_
     assert len(data["edges"]) > 0, "edges must appear even when endpoints include graph stubs"
     r2 = client.get("/graph")
     assert r2.status_code == 200
-    assert b"vis-network" in r2.content or b"CodeGraph" in r2.content
+    assert b"vis-network" in r2.content or b"ArchGraph" in r2.content
     if mcp_server._store is not None:
         mcp_server._store.close()
         mcp_server._store = None

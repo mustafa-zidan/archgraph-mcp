@@ -1,9 +1,9 @@
-"""CLI entry-point for CodeGraph MCP.
+"""CLI entry-point for ArchGraph MCP.
 
 Usage:
-    python -m codegraph_mcp analyze ./my_repo
-    python -m codegraph_mcp serve  ./my_repo
-    python -m codegraph_mcp serve  ./my_repo --transport sse --port 3847
+    python -m archgraph_mcp analyze ./my_repo
+    python -m archgraph_mcp serve  ./my_repo
+    python -m archgraph_mcp serve  ./my_repo --transport sse --port 3847
 """
 
 from __future__ import annotations
@@ -15,20 +15,20 @@ import os
 from pathlib import Path
 from typing import Literal, cast
 
-from codegraph_mcp.graph.builder import GraphBuilder
-from codegraph_mcp.graph.query_engine import QueryEngine
-from codegraph_mcp.logging_config import setup_logging
-from codegraph_mcp.storage.kuzu_store import KuzuStore
+from archgraph_mcp.graph.builder import GraphBuilder
+from archgraph_mcp.graph.query_engine import QueryEngine
+from archgraph_mcp.logging_config import setup_logging
+from archgraph_mcp.storage.kuzu_store import KuzuStore
 
 
 def _default_store_path() -> str:
-    return os.environ.get("CODEGRAPH_STORE") or "codegraph.kuzu"
+    return os.environ.get("ARCHGRAPH_STORE") or "archgraph.kuzu"
 
 
 def main(argv: list[str] | None = None) -> None:
     setup_logging()
     parser = argparse.ArgumentParser(
-        prog="codegraph-mcp",
+        prog="archgraph-mcp",
         description="Build and query a knowledge graph of your codebase.",
     )
     sub = parser.add_subparsers(dest="command", required=True)
@@ -42,12 +42,12 @@ def main(argv: list[str] | None = None) -> None:
         "--store",
         type=str,
         default=_default_store_path(),
-        help="Kuzu database path (default: codegraph.kuzu or CODEGRAPH_STORE)",
+        help="Kuzu database path (default: archgraph.kuzu or ARCHGRAPH_STORE)",
     )
     p_analyze.add_argument(
         "--semantic-index",
         action="store_true",
-        help="Build embedding vector index (requires pip install codegraph-mcp[semantic])",
+        help="Build embedding vector index (requires pip install archgraph-mcp[semantic])",
     )
 
     # ---- serve ----
@@ -59,7 +59,7 @@ def main(argv: list[str] | None = None) -> None:
         "--store",
         type=str,
         default=_default_store_path(),
-        help="Kuzu database path (default: codegraph.kuzu or CODEGRAPH_STORE)",
+        help="Kuzu database path (default: archgraph.kuzu or ARCHGRAPH_STORE)",
     )
     p_serve.add_argument(
         "--transport",
@@ -95,7 +95,7 @@ def main(argv: list[str] | None = None) -> None:
 
 def _run_analyze(repo: Path, store_path: str, *, semantic_index: bool = False) -> None:
     if semantic_index:
-        os.environ["CODEGRAPH_BUILD_SEMANTIC_INDEX"] = "1"
+        os.environ["ARCHGRAPH_BUILD_SEMANTIC_INDEX"] = "1"
 
     builder = GraphBuilder()
     builder.build_from_repository(repo.resolve())
@@ -104,7 +104,7 @@ def _run_analyze(repo: Path, store_path: str, *, semantic_index: bool = False) -
     store = KuzuStore(resolved)
     store.save_graph(builder.all_nodes(), builder.all_edges())
 
-    from codegraph_mcp.semantic.build import maybe_build_semantic_index
+    from archgraph_mcp.semantic.build import maybe_build_semantic_index
 
     maybe_build_semantic_index(resolved, builder.all_nodes())
 
@@ -127,9 +127,9 @@ def _run_serve(
     os.environ["PORT"] = str(port)
     os.environ["FASTMCP_PORT"] = str(port)
 
-    from codegraph_mcp.server.mcp_server import initialize, mcp
+    from archgraph_mcp.server.mcp_server import initialize, mcp
 
-    log = logging.getLogger("codegraph_mcp")
+    log = logging.getLogger("archgraph_mcp")
     graph_ui_effective = graph_ui and transport != "stdio"
     if graph_ui and transport == "stdio":
         log.warning(

@@ -2,8 +2,8 @@
 
 from pathlib import Path
 
-from codegraph_mcp.enums import NodeType
-from codegraph_mcp.graph.builder import GraphBuilder
+from archgraph_mcp.enums import NodeType
+from archgraph_mcp.graph.builder import GraphBuilder
 
 
 class TestGraphBuilder:

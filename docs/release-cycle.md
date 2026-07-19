@@ -1,6 +1,6 @@
 # Release cycle
 
-This document describes how **codegraph-mcp** goes from source on the default branch to a **PyPI** package and a
+This document describes how **archgraph-mcp** goes from source on the default branch to a **PyPI** package and a
 **GitHub Release**. Automation lives in [`.github/workflows/release.yml`](../.github/workflows/release.yml).
 
 ## Concepts
@@ -9,7 +9,7 @@ This document describes how **codegraph-mcp** goes from source on the default br
 | ---------------------------------------- | ---------------------------------------------------------------------------------- |
 | **`pyproject.toml` → `project.version`** | Single source of truth for the version baked into wheels/sdists.                   |
 | **Git tag `vX.Y.Z`**                     | Points at the commit you are releasing; created by the workflow.                   |
-| **PyPI**                                 | Public index users install from (`pip install codegraph-mcp`).                     |
+| **PyPI**                                 | Public index users install from (`pip install archgraph-mcp`).                     |
 | **GitHub Release**                       | Human-facing notes and downloadable `.whl` / `.tar.gz` (plus Sigstore signatures). |
 
 Publishing uses **PyPI trusted publishing** (OIDC): no long-lived PyPI token in GitHub secrets if you configure the
@@ -21,9 +21,9 @@ Do this once per repository (or when rotating configuration).
 
 ### 1. PyPI
 
-1. Create the **codegraph-mcp** project on PyPI (or claim it if reserved).
+1. Create the **archgraph-mcp** project on PyPI (or claim it if reserved).
 2. **Settings → Publishing → Add a new pending publisher** (or equivalent):
-   - **PyPI project name:** `codegraph-mcp`
+   - **PyPI project name:** `archgraph-mcp`
    - **Owner / repository:** your GitHub org or user and this repo
    - **Workflow name:** `release.yml`
    - **Environment name:** `pypi`
@@ -63,8 +63,8 @@ first.
 
 3. **Verify**
 
-   - Package appears on [PyPI: codegraph-mcp](https://pypi.org/p/codegraph-mcp).
-   - **Releases** on GitHub shows **CodeGraph MCP vX.Y.Z** with notes and assets.
+   - Package appears on [PyPI: archgraph-mcp](https://pypi.org/p/archgraph-mcp).
+   - **Releases** on GitHub shows **ArchGraph MCP vX.Y.Z** with notes and assets.
 
 ### Version format
 

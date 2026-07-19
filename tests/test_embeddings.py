@@ -6,7 +6,7 @@ from unittest.mock import patch
 
 import pytest
 
-from codegraph_mcp.semantic.embeddings import OpenAICompatibleEmbeddings
+from archgraph_mcp.semantic.embeddings import OpenAICompatibleEmbeddings
 
 
 def _fake_items(count: int, dim: int = 3) -> list[dict]:
@@ -28,7 +28,7 @@ def test_embed_batches_matching_response():
         calls.append(len(inp))
         return {"data": _fake_items(len(inp))}
 
-    with patch("codegraph_mcp.semantic.embeddings._post_json", side_effect=fake_post):
+    with patch("archgraph_mcp.semantic.embeddings._post_json", side_effect=fake_post):
         out = emb.embed(["a", "b", "c", "c", "d"])
 
     assert len(out) == 5
@@ -50,7 +50,7 @@ def test_embed_falls_back_when_batch_returns_fewer_vectors():
         return {"data": _fake_items(1)}
 
     texts = ["x"] * 5
-    with patch("codegraph_mcp.semantic.embeddings._post_json", side_effect=fake_post):
+    with patch("archgraph_mcp.semantic.embeddings._post_json", side_effect=fake_post):
         out = emb.embed(texts)
 
     assert len(out) == 5
@@ -68,6 +68,6 @@ def test_embed_single_input_mismatch_raises():
     def fake_post(url: str, headers: dict, body: dict, timeout: float = 120.0):
         return {"data": []}
 
-    with patch("codegraph_mcp.semantic.embeddings._post_json", side_effect=fake_post):
+    with patch("archgraph_mcp.semantic.embeddings._post_json", side_effect=fake_post):
         with pytest.raises(RuntimeError, match="1 input"):
             emb.embed(["only"])

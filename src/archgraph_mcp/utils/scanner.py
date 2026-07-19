@@ -6,7 +6,7 @@ import logging
 from collections.abc import Generator
 from pathlib import Path
 
-logger = logging.getLogger("codegraph_mcp.scanner")
+logger = logging.getLogger("archgraph_mcp.scanner")
 
 # Extensions we know how to parse
 SUPPORTED_EXTENSIONS: dict[str, str] = {

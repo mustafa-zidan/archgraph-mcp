@@ -8,18 +8,18 @@ from pathlib import Path
 
 import networkx as nx
 
-from codegraph_mcp.enums import EdgeType, NodeType
-from codegraph_mcp.models import Edge, Node
-from codegraph_mcp.parser.base import BaseParser, ParseResult
-from codegraph_mcp.parser.java import JavaParser
-from codegraph_mcp.parser.kotlin import KotlinParser
-from codegraph_mcp.parser.typescript import TypeScriptParser
-from codegraph_mcp.utils.scanner import (
+from archgraph_mcp.enums import EdgeType, NodeType
+from archgraph_mcp.models import Edge, Node
+from archgraph_mcp.parser.base import BaseParser, ParseResult
+from archgraph_mcp.parser.java import JavaParser
+from archgraph_mcp.parser.kotlin import KotlinParser
+from archgraph_mcp.parser.typescript import TypeScriptParser
+from archgraph_mcp.utils.scanner import (
     detect_language,
     scan_repository,
 )
 
-logger = logging.getLogger("codegraph_mcp.graph.builder")
+logger = logging.getLogger("archgraph_mcp.graph.builder")
 
 # Registry: language string → parser instance
 _PARSERS: dict[str, BaseParser] = {

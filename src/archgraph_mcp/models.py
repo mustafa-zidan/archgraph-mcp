@@ -6,7 +6,7 @@ from typing import Any
 
 from pydantic import BaseModel, Field
 
-from codegraph_mcp.enums import EdgeType, NodeType
+from archgraph_mcp.enums import EdgeType, NodeType
 
 
 class Node(BaseModel):

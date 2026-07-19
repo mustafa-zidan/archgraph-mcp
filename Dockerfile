@@ -14,4 +14,4 @@ ENV MCP_TRANSPORT=streamable-http
 
 EXPOSE 3847
 
-CMD ["python", "-m", "codegraph_mcp", "serve", "/app", "--transport", "streamable-http"]
+CMD ["python", "-m", "archgraph_mcp", "serve", "/app", "--transport", "streamable-http"]

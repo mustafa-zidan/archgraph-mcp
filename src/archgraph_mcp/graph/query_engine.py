@@ -9,8 +9,8 @@ from typing import Protocol
 
 import networkx as nx
 
-from codegraph_mcp.enums import EdgeType, NodeType
-from codegraph_mcp.models import (
+from archgraph_mcp.enums import EdgeType, NodeType
+from archgraph_mcp.models import (
     ArchitectureSummary,
     Edge,
     GraphQuery,
@@ -18,7 +18,7 @@ from codegraph_mcp.models import (
     Node,
 )
 
-logger = logging.getLogger("codegraph_mcp.graph.query_engine")
+logger = logging.getLogger("archgraph_mcp.graph.query_engine")
 
 
 class _SupportsFtsSearch(Protocol):

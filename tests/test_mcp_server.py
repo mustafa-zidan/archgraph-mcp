@@ -5,8 +5,8 @@ from pathlib import Path
 
 import pytest
 
-from codegraph_mcp.server import mcp_server
-from codegraph_mcp.server.mcp_server import (
+from archgraph_mcp.server import mcp_server
+from archgraph_mcp.server.mcp_server import (
     architecture_summary,
     impact_analysis,
     initialize,

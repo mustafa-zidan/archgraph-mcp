@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/codegraph-mcp
+      url: https://pypi.org/p/archgraph-mcp
     steps:
       - uses: actions/checkout@v4
         with:
@@ -109,7 +109,7 @@ jobs:
             printf '%s\n' "$NOTES" > release_notes.md
           fi
 
-          printf '\n## Installation\n\n```bash\npip install codegraph-mcp==%s\n```\n\nOr with uv:\n```bash\nuv add codegraph-mcp==%s\n```\n' \
+          printf '\n## Installation\n\n```bash\npip install archgraph-mcp==%s\n```\n\nOr with uv:\n```bash\nuv add archgraph-mcp==%s\n```\n' \
             "$VERSION" "$VERSION" >> release_notes.md
 
       - name: Sign distributions with Sigstore
@@ -121,7 +121,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ inputs.version }}
-          name: CodeGraph MCP v${{ inputs.version }}
+          name: ArchGraph MCP v${{ inputs.version }}
           body_path: release_notes.md
           draft: false
           prerelease: ${{ inputs.prerelease }}

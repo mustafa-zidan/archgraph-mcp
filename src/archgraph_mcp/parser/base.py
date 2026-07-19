@@ -8,9 +8,9 @@ from pathlib import Path
 
 from tree_sitter import Node as TSNode
 
-from codegraph_mcp.models import Edge, Node
+from archgraph_mcp.models import Edge, Node
 
-logger = logging.getLogger("codegraph_mcp.parser")
+logger = logging.getLogger("archgraph_mcp.parser")
 
 
 def utf8_node_text(node: TSNode) -> str:
