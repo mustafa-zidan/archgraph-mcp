@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.1]
+
+Fix: `pyproject.toml` had no `readme` field, so 1.0.0 published to PyPI with no long description on the project page.
+Added `readme = "README.md"`.
+
 ## [1.0.0]
 
 Initial PyPI release: MCP server that builds a code knowledge graph (Tree-sitter parsers for TypeScript, Java, and

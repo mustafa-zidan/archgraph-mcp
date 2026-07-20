@@ -4,8 +4,9 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "archgraph-mcp"
-version = "1.0.0"
+version = "1.0.1"
 description = "MCP server that builds a knowledge graph of a software codebase"
+readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "pydantic>=2.13.4",
