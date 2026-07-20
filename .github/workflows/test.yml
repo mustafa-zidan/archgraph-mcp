@@ -14,6 +14,13 @@ jobs:
       matrix:
         os: [ ubuntu-latest, macos-latest, windows-latest ]
         python-version: [ "3.12", "3.13", "3.14" ]
+        exclude:
+          # kuzu has no cp314 wheel for Windows yet, so it falls back to a
+          # source build that needs `make`, which the windows-latest runner
+          # doesn't have. Drop until upstream publishes a win_amd64 wheel:
+          # https://pypi.org/project/kuzu/#files
+          - os: windows-latest
+            python-version: "3.14"
 
     steps:
       - uses: actions/checkout@v6

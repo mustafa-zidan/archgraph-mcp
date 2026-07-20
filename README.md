@@ -194,7 +194,11 @@ Optional env, e.g. a custom Kuzu path:
   "mcpServers": {
     "archgraph": {
       "command": "uvx",
-      "args": ["archgraph-mcp", "serve", "/path/to/repo"],
+      "args": [
+        "archgraph-mcp",
+        "serve",
+        "/path/to/repo"
+      ],
       "env": {
         "ARCHGRAPH_STORE": "/path/to/repo/.archgraph/archgraph.kuzu"
       }
@@ -274,6 +278,23 @@ not an error.
 - TypeScript / TSX
 - Java
 - Kotlin (`.kt`, `.kts`)
+
+## Version support
+
+Requires Python 3.12+ (`requires-python` in [`pyproject.toml`](pyproject.toml)). CI
+([`.github/workflows/test.yml`](.github/workflows/test.yml)) runs this matrix on every push:
+
+| OS      | 3.12 | 3.13 | 3.14                   |
+| ------- | ---- | ---- | ---------------------- |
+| Linux   | ✅   | ✅   | ✅                     |
+| macOS   | ✅   | ✅   | ✅ (built from source) |
+| Windows | ✅   | ✅   | ❌ see note below      |
+
+Windows + Python 3.14 is excluded from CI. [`kuzu`](https://pypi.org/project/kuzu/#files) 0.11.3 ships a `cp314` wheel
+for Linux but not for Windows or macOS, so both fall back to a source build. macOS's build succeeds because Xcode's
+command line tools provide `make`; the Windows runner has no such toolchain, so the same fallback fails there. It's an
+upstream packaging gap, not something this project controls. Docker sidesteps it entirely, since the container is
+Linux-based regardless of host OS.
 
 ## Running it as a service
 
